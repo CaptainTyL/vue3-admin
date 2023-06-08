@@ -29,7 +29,6 @@ export const wrapperEnv = envOptions => {
       process.env[key] = JSON.stringify(val)
     }
   }
-  console.log('wrapperEnv', rst)
   return rst
 }
 
@@ -50,6 +49,5 @@ export const createProxy = (list = []) => {
       ...(isHttps ? { secure: false } : {})
     }
   }
-  console.log('createProxy', rst)
   return rst
 }
