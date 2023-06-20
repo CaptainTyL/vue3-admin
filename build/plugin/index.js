@@ -2,6 +2,7 @@
 import { visualizer } from 'rollup-plugin-visualizer'
 
 import { configHtmlPlugin } from './html'
+import { configMockPlugin } from './mock'
 
 export const createVitePlugins = (viteEnv, isBuild) => {
   const plugins = [configHtmlPlugin(viteEnv, isBuild)]
@@ -14,5 +15,9 @@ export const createVitePlugins = (viteEnv, isBuild) => {
       })
     )
   }
+  if (viteEnv?.VITE_APP_USE_MOCK) {
+    plugins.push(configMockPlugin(isBuild))
+  }
+
   return plugins
 }

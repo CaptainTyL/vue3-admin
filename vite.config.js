@@ -21,7 +21,11 @@ export default defineConfig(({ command, mode }) => {
       vue(),
       Components({
         // 按需加载ant-design-vue 组件
-        resolvers: [AntDesignVueResolver()]
+        resolvers: [
+          AntDesignVueResolver({
+            importStyle: 'less' // 一定要开启这个配置项
+          })
+        ]
       }),
       ...createVitePlugins(viteEnv, isBuild)
     ],
@@ -36,6 +40,14 @@ export default defineConfig(({ command, mode }) => {
       preprocessorOptions: {
         less: {
           // 配置项
+          modifyVars: {
+            // 在这里自定义主题色等样式
+            // 'primary-color': '#1da57a',
+            // 'link-color': '#1da57a',
+            'border-radius-base': '2px'
+          },
+          // DO NOT REMOVE THIS LINE
+          javascriptEnabled: true
         }
       }
     },
