@@ -16,7 +16,7 @@
           <!-- 登录表单 -->
           <a-form id="formLogin" class="login-form" ref="formLogin" :form="form">
             <a-tabs
-              :activeKey="customActiveKey"
+              v-model:activeKey="customActiveKey"
               :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
             >
               <a-tab-pane key="tab1" tab="账户密码登录">
