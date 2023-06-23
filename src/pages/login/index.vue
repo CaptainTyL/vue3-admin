@@ -15,10 +15,7 @@
         <div class="main">
           <!-- 登录表单 -->
           <a-form id="formLogin" class="login-form" ref="formLogin" :form="form">
-            <a-tabs
-              v-model:activeKey="customActiveKey"
-              :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
-            >
+            <a-tabs v-model:activeKey="customActiveKey" :tabBarStyle="{ borderBottom: 'unset' }">
               <a-tab-pane key="tab1" tab="账户密码登录">
                 <!-- <a-alert
                   v-if="isLoginError"
@@ -46,14 +43,18 @@
               <a-tab-pane key="tab2" tab="手机号登录">
                 <a-form-item>
                   <a-input size="large" type="text" placeholder="手机号">
-                    <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                    <template #prefix>
+                      <user-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
+                    </template>
                   </a-input>
                 </a-form-item>
                 <a-row :gutter="16">
                   <a-col class="gutter-row" :span="16">
                     <a-form-item>
                       <a-input size="large" type="text" placeholder="验证码">
-                        <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
+                        <template #prefix>
+                          <mail-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
+                        </template>
                       </a-input>
                     </a-form-item>
                   </a-col>
@@ -72,7 +73,6 @@
                 </a-row>
               </a-tab-pane>
             </a-tabs>
-
             <a-form-item>
               <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]"
                 >记住密码</a-checkbox
@@ -84,13 +84,11 @@
                 >忘记密码</router-link
               > -->
             </a-form-item>
-
             <a-form-item style="margin-top: 24px">
               <a-button size="large" type="primary" htmlType="submit" class="login-button"
                 >登录</a-button
               >
             </a-form-item>
-
             <div class="user-login-other">
               <span>其他登录方式</span>
               <a>
@@ -112,7 +110,7 @@
   </div>
 </template>
 <script setup>
-  import { WechatOutlined, UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+  import { WechatOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons-vue'
   import { ref } from 'vue'
 
   // import { onMounted, onBeforeUnmount } from 'vue'
