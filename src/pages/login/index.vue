@@ -14,26 +14,27 @@
         </div>
         <div class="main">
           <!-- 登录表单 -->
-          <a-form id="formLogin" class="login-form" ref="formLogin" :form="form">
+          <a-form :model="form" ref="formLogin" id="formLogin" class="login-form">
             <a-tabs v-model:activeKey="customActiveKey" :tabBarStyle="{ borderBottom: 'unset' }">
               <a-tab-pane key="tab1" tab="账户密码登录">
-                <!-- <a-alert
-                  v-if="isLoginError"
-                  type="error"
-                  showIcon
-                  style="margin-bottom: 24px"
-                  :message="$t('user.login.message-invalid-credentials')"
-                /> -->
-                <a-form-item>
-                  <a-input size="large" type="text" placeholder="请输入账号">
-                    <!-- <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" /> -->
+                <a-form-item name="name" :rules="[{ required: true, message: '请输入账号' }]">
+                  <a-input
+                    v-model:value="form.name"
+                    size="large"
+                    type="text"
+                    placeholder="请输入账号"
+                  >
                     <template #prefix>
                       <user-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                     </template>
                   </a-input>
                 </a-form-item>
-                <a-form-item>
-                  <a-input-password size="large" placeholder="请输入密码">
+                <a-form-item name="password" :rules="[{ required: true, message: '请输入密码' }]">
+                  <a-input-password
+                    v-model:value="form.password"
+                    size="large"
+                    placeholder="请输入密码"
+                  >
                     <template #prefix>
                       <lock-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                     </template>
@@ -41,8 +42,13 @@
                 </a-form-item>
               </a-tab-pane>
               <a-tab-pane key="tab2" tab="手机号登录">
-                <a-form-item>
-                  <a-input size="large" type="text" placeholder="手机号">
+                <a-form-item name="mobile" :rules="[{ required: true, message: '请输入账号' }]">
+                  <a-input
+                    v-model:value="form.mobile"
+                    size="large"
+                    type="text"
+                    placeholder="手机号"
+                  >
                     <template #prefix>
                       <user-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                     </template>
@@ -50,8 +56,16 @@
                 </a-form-item>
                 <a-row :gutter="16">
                   <a-col class="gutter-row" :span="16">
-                    <a-form-item>
-                      <a-input size="large" type="text" placeholder="验证码">
+                    <a-form-item
+                      name="smsCode"
+                      :rules="[{ required: true, message: '请输入验证码' }]"
+                    >
+                      <a-input
+                        v-model:value="form.smsCode"
+                        size="large"
+                        type="text"
+                        placeholder="验证码"
+                      >
                         <template #prefix>
                           <mail-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
                         </template>
@@ -59,16 +73,11 @@
                     </a-form-item>
                   </a-col>
                   <a-col class="gutter-row" :span="8">
-                    <!-- <a-button
-                      class="getCaptcha"
-                      tabindex="-1"
-                      :disabled="state.smsSendBtn"
-                      @click.stop.prevent="getCaptcha"
-                      v-text="
+                    <!-- v-text="
                         (!state.smsSendBtn && $t('user.register.get-verification-code')) ||
                         state.time + ' s'
-                      "
-                    ></a-button> -->
+                      " -->
+                    <a-button class="getCaptcha" tabindex="-1">发送验证码</a-button>
                   </a-col>
                 </a-row>
               </a-tab-pane>
@@ -85,7 +94,7 @@
               > -->
             </a-form-item>
             <a-form-item style="margin-top: 24px">
-              <a-button size="large" type="primary" htmlType="submit" class="login-button"
+              <a-button size="large" type="primary" class="login-button" @click="loginSubmit"
                 >登录</a-button
               >
             </a-form-item>
@@ -112,19 +121,26 @@
 <script setup>
   import { WechatOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons-vue'
   import { ref } from 'vue'
+  import { login } from '@/api/auth'
 
-  // import { onMounted, onBeforeUnmount } from 'vue'
-  // onMounted(() => {
-  //   document.body.classList.add('userLayout')
-  // })
-  // onBeforeUnmount(() => {
-  //   document.body.classList.remove('userLayout')
-  // })
-
-  const form = ref({})
+  const form = ref({
+    name: '',
+    password: '',
+    mobile: '',
+    smsCode: ''
+  })
   const formLogin = ref(null)
 
   const customActiveKey = ref('tab1')
+
+  const loginSubmit = () => {
+    formLogin.value.validateFields().then(() => {
+      // 执行登录操作
+      login({ name: form.value.name, password: form.value.password }).then(res => {
+        console.log(res)
+      })
+    })
+  }
 </script>
 <style lang="less" scoped>
   .login-layout {

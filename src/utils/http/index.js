@@ -15,8 +15,9 @@ export const createAxios = (options = {}) => {
   service.interceptors.request.use(reqResolve, reqReject)
   // 创建响应拦截器
   service.interceptors.response.use(resResolve, resReject)
-}
 
+  return service
+}
 // 创建默认请求axios
 export const defAxios = createAxios()
 
