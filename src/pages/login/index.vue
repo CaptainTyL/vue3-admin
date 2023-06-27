@@ -122,6 +122,11 @@
   import { WechatOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons-vue'
   import { ref } from 'vue'
   import { login } from '@/api/auth'
+  import useRoute from '@/utils/hooks/useRoute.js'
+  import { setToken } from '@/utils/token'
+  import { message } from 'ant-design-vue'
+
+  const { push } = useRoute()
 
   const form = ref({
     name: '',
@@ -136,9 +141,21 @@
   const loginSubmit = () => {
     formLogin.value.validateFields().then(() => {
       // 执行登录操作
-      login({ name: form.value.name, password: form.value.password }).then(res => {
-        console.log(res)
-      })
+      login({ name: form.value.name, password: form.value.password })
+        .then(res => {
+          console.log(res)
+          const { code, message: msg, data } = res
+          if (code === 0) {
+            // 设置token 跳转到首页
+            message.success('登录成功！')
+            setToken(data.token)
+            push('/')
+          } else {
+            // 登录失败 提示失败信息
+            message.warning(msg)
+          }
+        })
+        .catch(res => {})
     })
   }
 </script>
