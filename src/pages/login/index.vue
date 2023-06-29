@@ -23,6 +23,7 @@
                     size="large"
                     type="text"
                     placeholder="请输入账号"
+                    aotucomplete="off"
                   >
                     <template #prefix>
                       <user-outlined :style="{ color: 'rgba(0,0,0,.25)' }" />
@@ -41,7 +42,7 @@
                   </a-input-password>
                 </a-form-item>
               </a-tab-pane>
-              <a-tab-pane key="tab2" tab="手机号登录">
+              <a-tab-pane key="tab2" tab="手机号登录" disabled>
                 <a-form-item name="mobile" :rules="[{ required: true, message: '请输入账号' }]">
                   <a-input
                     v-model:value="form.mobile"
@@ -83,9 +84,7 @@
               </a-tab-pane>
             </a-tabs>
             <a-form-item>
-              <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]"
-                >记住密码</a-checkbox
-              >
+              <a-checkbox v-model:checked="rememberMe">记住密码</a-checkbox>
               <!-- <router-link
                 :to="{ name: 'recover', params: { user: 'aaa' } }"
                 class="forge-password"
@@ -120,12 +119,14 @@
 </template>
 <script setup>
   import { WechatOutlined, UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons-vue'
-  import { ref } from 'vue'
+  import { getCurrentInstance, ref } from 'vue'
   import { login } from '@/api/auth'
   import useRoute from '@/utils/hooks/useRoute.js'
   import { setToken } from '@/utils/token'
-  import { message } from 'ant-design-vue'
+  import { lStorage } from '@/utils/cache'
 
+
+  const { proxy } = getCurrentInstance()
   const { push } = useRoute()
 
   const form = ref({
@@ -137,7 +138,7 @@
   const formLogin = ref(null)
 
   const customActiveKey = ref('tab1')
-
+  const rememberMe = ref(false)
   const loginSubmit = () => {
     formLogin.value.validateFields().then(() => {
       // 执行登录操作
@@ -147,12 +148,19 @@
           const { code, message: msg, data } = res
           if (code === 0) {
             // 设置token 跳转到首页
-            message.success('登录成功！')
+            proxy.$message.success('登录成功！')
             setToken(data.token)
+            if (rememberMe.value) {
+              // 将用户登录信息储存到浏览器缓存中
+              lStorage.set('loginInfo', { name: form.value.name, password: form.value.password })
+            } else {
+              lStorage.remove('loginInfo')
+            }
             push('/')
+            
           } else {
             // 登录失败 提示失败信息
-            message.warning(msg)
+            proxy.$message.warning(msg)
           }
         })
         .catch(res => {})

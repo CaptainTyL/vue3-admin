@@ -20,7 +20,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [
       vue(),
       Components({
-        // 按需加载ant-design-vue 组件
+        // 配置按需加载ant-design-vue 组件
         resolvers: [
           AntDesignVueResolver({
             importStyle: 'less' // 一定要开启这个配置项
